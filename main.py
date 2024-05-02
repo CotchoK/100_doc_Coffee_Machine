@@ -34,50 +34,63 @@
 
 # imports
 import coffee_options as co
+import coffee_functions as cf
+import math as m
 
 
 # TODO: 1. variables for resources of the coffee machine
 # define and initialise variables
-water = 300
-milk = 200
-coffee = 100
-money = 0.0
-
-# TODO: 2. ability to print a report on remaining resource in the machine, and money
-response = input("What would you like? (espresso, latte, cappuccino)? ")
-
-if response == "report":
-    # print a report of resources remaining
-    print(f"Water: {water}ml\nMilk: {milk}ml\nCoffee: {coffee}g\nMoney: ${money}")
-elif response == "espresso":
-    exit()
-    # check resources
-    # ask money
-    # check money
-    # update resources (make coffee)
-    # print enjoy coffee
-elif response == "latte":
-    exit()
-    # check resources
-    # ask money
-    # check money
-    # update resources (make coffee)
-    # print enjoy coffee
-elif response == "cappuccino":
-    exit()
-    # check resources
-    # ask money
-    # check money
-    # update resources (make coffee)
-    # print enjoy coffee
-elif response == "off":
-    exit()
+WATER_CAPACITY = 300
+MILK_CAPACITY = 200
+COFFEE_CAPACITY = 100
 
 
-# TODO: 3. on order check if there are sufficient resource to make the item.
-# TODO: 3.1 if not then indicate insufficient resources
-# TODO: 3.2 if there are sufficient resource to make the drink, process coins
+def run_coffee_machine():
 
-# TODO: 4 PROCESS COINS: ask user to enter a quantity of each denomination
-# TODO: 4.1 if funds insufficient advise user funds insufficient then refund
-# TODO: 4.2 if funds sufficient, calculate change, update resources in machine, dispense and thank customer
+    money = 0.0
+    water = WATER_CAPACITY
+    milk = MILK_CAPACITY
+    coffee = COFFEE_CAPACITY
+    machine_on = True
+
+    while machine_on:
+
+        # TODO: 2. ability to print a report on remaining resource in the machine, and money
+        response = input("\nWhat would you like? (espresso, latte, cappuccino)? ")
+
+        if response == "report":
+            # print a report of resources remaining
+            print(f"Water: {water}ml\nMilk: {milk}ml\nCoffee: {coffee}g\nMoney: ${money}")
+        elif response == "off":  # this ends execution
+            exit()
+        elif response in co.coffee:
+            # check resources
+            if cf.is_resources_sufficient(water, milk, coffee, co.coffee[response]):
+                # ask for payment
+                payment_amt = cf.request_payment()
+                # check money
+                monies_paid = cf.check_payment(payment_amt, co.coffee[response])
+                if monies_paid > 0:
+                    money = monies_paid
+                    # update resources (make coffee)
+                    water, milk, coffee = cf.make_coffee(water, milk, coffee, co.coffee[response], response)
+            else:
+                resources_replenished = input("Enter 'y' after you have replenished supplies. "
+                                              "Enter anything else to shut machine down. \n").lower()
+                if resources_replenished == 'y':
+                    water = WATER_CAPACITY
+                    milk = MILK_CAPACITY
+                    coffee = COFFEE_CAPACITY
+                else:
+                    machine_on = False
+
+
+run_coffee_machine()
+
+
+
+
+
+
+
+
