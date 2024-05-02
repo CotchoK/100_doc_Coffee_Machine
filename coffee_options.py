@@ -1,3 +1,4 @@
+# the dictionary of coffee options and their associated attributes (recipe and cost)
 coffee = {
     "espresso": {
         "water": 50,

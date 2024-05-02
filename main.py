@@ -35,18 +35,22 @@
 # imports
 import coffee_options as co
 import coffee_functions as cf
-import math as m
 
 
 # TODO: 1. variables for resources of the coffee machine
-# define and initialise variables
+# define and initialise global variables
 WATER_CAPACITY = 300
 MILK_CAPACITY = 200
 COFFEE_CAPACITY = 100
 
 
 def run_coffee_machine():
+    """
+    The program that runs the coffee machine. Will loop as long as the machine is on.
+    :return: n/a
+    """
 
+    # variables
     money = 0.0
     water = WATER_CAPACITY
     milk = MILK_CAPACITY
@@ -63,6 +67,8 @@ def run_coffee_machine():
             print(f"Water: {water}ml\nMilk: {milk}ml\nCoffee: {coffee}g\nMoney: ${money}")
         elif response == "off":  # this ends execution
             exit()
+        elif response == "prices":
+            cf.check_prices(co.coffee)
         elif response in co.coffee:
             # check resources
             if cf.is_resources_sufficient(water, milk, coffee, co.coffee[response]):
@@ -77,6 +83,7 @@ def run_coffee_machine():
             else:
                 resources_replenished = input("Enter 'y' after you have replenished supplies. "
                                               "Enter anything else to shut machine down. \n").lower()
+                # crude replenishment functionality that expects that all resources are replenished
                 if resources_replenished == 'y':
                     water = WATER_CAPACITY
                     milk = MILK_CAPACITY
